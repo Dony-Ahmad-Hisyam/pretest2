@@ -5,12 +5,13 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var flash = require("express-flash");
 var session = require("express-session");
+const MemoryStore = require("session-memory-store")(session);
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var pemeilikRouter = require("./routes/pemilik");
 var dpiRouter = require("./routes/dpi");
-var alatRouter = require("./routes/alatTangkap");
+var alatRouter = require("./routes/alat");
 var kapalRouter = require("./routes/kapal");
 
 var app = express();
@@ -27,13 +28,17 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
     cookie: {
-      maxAge: 60000,
+      maxAge: 60000000000,
+      secure: false,
+      httpOnly: true,
+      sameSite: "strict",
+      // domain: 'domainkkitananti.com',
     },
-    store: new session.MemoryStore(),
+    store: new MemoryStore(),
+    saveUninitialized: true,
+    resave: false,
+    secret: "secret",
   })
 );
 

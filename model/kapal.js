@@ -1,13 +1,10 @@
 const connection = require("../config/database");
 
-class ModelAlatTangkap {
+class ModelKapal {
   static async getAll() {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT alat_tangkap.*, kapal.nama_kapal 
-         FROM alat_tangkap 
-         LEFT JOIN kapal ON alat_tangkap.id_kapal = kapal.id_kapal 
-         ORDER BY alat_tangkap.id_alat_tangkap DESC`,
+        "SELECT kapal.*, pemilik.nama_pemilik AS nama_pemilik, dpi.nama_dpi AS nama_dpi, alat_tangkap.nama_alat_tangkap AS nama_alat_tangkap FROM kapal JOIN pemilik ON kapal.id_pemilik = pemilik.id_pemilik JOIN dpi ON kapal.id_dpi = dpi.id_dpi JOIN alat_tangkap ON kapal.id_alat_tangkap = alat_tangkap.id_alat_tangkap",
         (err, rows) => {
           if (err) {
             reject(err);
@@ -21,24 +18,20 @@ class ModelAlatTangkap {
 
   static async store(data) {
     return new Promise((resolve, reject) => {
-      connection.query(
-        "INSERT INTO alat_tangkap SET ?",
-        data,
-        (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
+      connection.query("INSERT INTO kapal SET ?", data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
         }
-      );
+      });
     });
   }
 
   static async getById(id) {
     return new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM alat_tangkap WHERE id_alat_tangkap = ?",
+        "SELECT * FROM kapal WHERE id_kapal = ?",
         id,
         (err, rows) => {
           if (err) {
@@ -54,7 +47,7 @@ class ModelAlatTangkap {
   static async update(id, data) {
     return new Promise((resolve, reject) => {
       connection.query(
-        "UPDATE alat_tangkap SET ? WHERE id_alat_tangkap = ?",
+        "UPDATE kapal SET ? WHERE id_kapal = ?",
         [data, id],
         (err, result) => {
           if (err) {
@@ -70,7 +63,7 @@ class ModelAlatTangkap {
   static async delete(id) {
     return new Promise((resolve, reject) => {
       connection.query(
-        "DELETE FROM alat_tangkap WHERE id_alat_tangkap = ?",
+        "DELETE FROM kapal WHERE id_kapal = ?",
         id,
         (err, result) => {
           if (err) {
@@ -84,4 +77,4 @@ class ModelAlatTangkap {
   }
 }
 
-module.exports = ModelAlatTangkap;
+module.exports = ModelKapal;

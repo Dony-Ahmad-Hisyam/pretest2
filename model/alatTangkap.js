@@ -4,13 +4,12 @@ class ModelAlatTangkap {
   static async getAll() {
     return new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM alat_tangkap ORDER BY id_alat_tangkap DESC",
+        "SELECT * FROM alat_tangkap ORDER BY id_alat_tangkap",
         (err, rows) => {
           if (err) {
             reject(err);
           } else {
             resolve(rows);
-            s;
           }
         }
       );

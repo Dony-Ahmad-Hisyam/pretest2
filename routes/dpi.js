@@ -1,16 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const ModelDpi = require("../model/modelDpi.js");
+const ModelUser = require("../model/modelUser.js");
 
 router.get("/", async function (req, res, next) {
   try {
+    let id = req.session.userId;
+    let Data = await ModelUser.getId(id);
     let rows = await ModelDpi.getAll();
-    res.render("dpi/index", {
-      data: rows,
-    });
+    if (Data.length > 0) {
+      res.render("dpi/index", { data: rows, email: Data[0].email });
+    } else {
+      res.redirect("/login");
+    }
   } catch (error) {
-    req.flash("error", error.message || "Terjadi kesalahan pada server");
-    res.redirect("/dpi");
+    res.redirect("/login");
   }
 });
 

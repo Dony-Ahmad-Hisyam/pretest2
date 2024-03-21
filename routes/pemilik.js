@@ -1,16 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const ModelPemilik = require("../model/modelPemilik.js");
+const ModelUser = require("../model/modelUser.js");
 
 router.get("/", async function (req, res, next) {
   try {
+    let id = req.session.userId;
+    let Data = await ModelUser.getId(id);
     let rows = await ModelPemilik.getAll();
-    res.render("pemilik/index", {
-      data: rows,
-    });
+    if (Data.length > 0) {
+      res.render("pemilik/index", { data: rows, email: Data[0].email });
+    } else {
+      res.redirect("/login");
+    }
   } catch (error) {
-    req.flash("error", error.message || "Terjadi kesalahan pada server");
-    res.redirect("/pemilik");
+    res.redirect("/login");
   }
 });
 
