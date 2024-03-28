@@ -1,14 +1,14 @@
 var express = require("express");
-const Model_Users = require("./model/Model_Users");
+const ModelUser = require("../model/modelUser");
 var router = express.Router();
 
 /* GET users listing. */
 router.get("/", async function (req, res, next) {
   try {
     let id = req.session.userId;
-    let Data = await Model_Users.getId(id);
+    let Data = await ModelUser.getId(id);
     if (Data.length > 0) {
-      if (Data[0].level_users !== 1) {
+      if (Data[0].level_user != 1) {
         res.redirect("/logout");
       } else {
         res.render("users/super", {
