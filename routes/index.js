@@ -13,10 +13,10 @@ router.get("/", async function (req, res, next) {
         email: Data[0].email,
       });
     } else {
-      res.status(401).json({ error: "user tidak ada" });
+      res.redirect("/login");
     }
   } catch (error) {
-    res.status(501).json("Butuh akses login");
+    res.redirect("/login");
   }
 });
 
@@ -54,8 +54,16 @@ router.post("/log", async (req, res) => {
       let cek = await bcrypt.compare(password, enkripsi);
       if (cek) {
         req.session.userId = Data[0].id_users;
-        req.flash("success", "Berhasil login");
-        res.redirect("/");
+        //tambahkan kondisi pengecekan level pada user yang login
+        if (Data[0].level_user == 1) {
+          req.flash("success", "Berhasil login");
+          res.redirect("/");
+        } else if (Data[0].level_user == 2) {
+          req.flash("error", "Email atau password salah");
+          res.redirect("/users");
+        } else {
+          res.redirect("/login");
+        }
       } else {
         req.flash("error", "Email atau password salah");
         res.redirect("/login");
